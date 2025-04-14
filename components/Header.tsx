@@ -11,6 +11,11 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import SmartToy from '@mui/icons-material/SmartToy';
+import Create from '@mui/icons-material/Create';
+import BarChart from '@mui/icons-material/BarChart';
+import Settings from '@mui/icons-material/Settings';
+import Info from '@mui/icons-material/Info';
 
 export default function Header() {
   const router = useRouter();
@@ -58,10 +63,12 @@ export default function Header() {
         {/* Onglets */}
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button onClick={() => router.push('/quiz/ai')} color="inherit">
-            🤖 Quiz IA
+            <SmartToy sx={{ verticalAlign: 'middle', mr: 1 }} />
+            Quiz IA
           </Button>
           <Button onClick={() => router.push('/quiz/manual')} color="inherit">
-            ✍️ Quiz Manuel
+            <Create sx={{ verticalAlign: 'middle', mr: 1 }} />
+            Quiz personnalisé
           </Button>
           <Badge
             color="secondary"
@@ -70,11 +77,17 @@ export default function Header() {
             overlap="rectangular"
           >
             <Button onClick={() => router.push('/quiz/history')} color="inherit">
-              📊 Résultats
+              <BarChart sx={{ verticalAlign: 'middle', mr: 1 }} />
+              Résultats
             </Button>
           </Badge>
           <Button onClick={() => router.push('/settings')} color="inherit">
-            ⚙️ Paramètres
+            <Settings sx={{ verticalAlign: 'middle', mr: 1 }} />
+            Paramètres
+          </Button>
+          <Button onClick={() => router.push('/about')} color="inherit">
+            <Info sx={{ verticalAlign: 'middle', mr: 1 }} />
+            À propos
           </Button>
         </Box>
       </Toolbar>

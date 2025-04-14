@@ -10,6 +10,9 @@ import {
   Container,
   Typography,
 } from '@mui/material';
+import MenuBook from '@mui/icons-material/MenuBook';
+import Replay from '@mui/icons-material/Replay';
+import PictureAsPdf from '@mui/icons-material/PictureAsPdf';
 
 export default function RecapPage() {
   const [content, setContent] = useState('');
@@ -121,8 +124,9 @@ Réponds directement avec une fiche en texte brut.
 
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
-      <Typography variant="h4" gutterBottom>
-        📚 Fiche de révision
+      <Typography variant="h4" gutterBottom align="center" fontWeight={700}>
+        <MenuBook sx={{ verticalAlign: 'middle', mr: 1 }} />
+        Fiche de révision
       </Typography>
       <Typography variant="h6" gutterBottom>
         Thème : <strong>{theme}</strong> — Niveau : <strong>{niveau}</strong>
@@ -174,8 +178,9 @@ Réponds directement avec une fiche en texte brut.
           color="success"
           size="large"
           onClick={handleRetry}
+          startIcon={<Replay />}
         >
-          🔄 Refaire un quiz sur ce thème
+          Refaire un quiz sur ce thème
         </Button>
 
         <Button
@@ -183,8 +188,9 @@ Réponds directement avec une fiche en texte brut.
           color="primary"
           size="large"
           onClick={handleExportPDF}
+          startIcon={<PictureAsPdf />}
         >
-          🖨️ Exporter la fiche en PDF
+          Exporter la fiche en PDF
         </Button>
       </Box>
     </Container>

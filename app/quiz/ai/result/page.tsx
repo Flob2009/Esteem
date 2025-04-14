@@ -4,14 +4,23 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
+  Paper,
   CircularProgress,
   Container,
   Snackbar,
   Typography,
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import BarChart from '@mui/icons-material/BarChart';
+import Home from '@mui/icons-material/Home';
+import RestartAlt from '@mui/icons-material/RestartAlt';
+import MenuBook from '@mui/icons-material/MenuBook';
+import Replay from '@mui/icons-material/Replay';
+import IosShare from '@mui/icons-material/IosShare';
+import EmojiEvents from '@mui/icons-material/EmojiEvents';
+import RocketLaunch from '@mui/icons-material/RocketLaunch';
+import AccessTime from '@mui/icons-material/AccessTime';
+import MilitaryTech from '@mui/icons-material/MilitaryTech';
 
 interface Question {
   question: string;
@@ -189,21 +198,16 @@ export default function AIQuizResultPage() {
   };
 
   const percent = (earnedPoints / maxPoints) * 100;
-  let medal = '';
   let feedback = '';
 
   if (percent >= 90) {
-    medal = '🥇 Or';
     feedback = "Excellent travail ! 💪";
   } else if (percent >= 70) {
-    medal = '🥈 Argent';
     feedback = "Très bon score, continue ainsi !";
   } else if (percent >= 50) {
-    medal = '🥉 Bronze';
     feedback = "Pas mal ! Tu peux encore progresser 💡";
   } else {
-    medal = '🕓';
-    feedback = "Courage, persévère ! 🚀";
+    feedback = "Courage, persévère !";
   }
 
   if (loading) {
@@ -216,39 +220,54 @@ export default function AIQuizResultPage() {
 
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
-      <Typography variant="h4" gutterBottom>Résultats du Quiz</Typography>
-      <Typography variant="h6" gutterBottom>🏅 Médaille : {medal}</Typography>
-      <Typography variant="body1" gutterBottom>{feedback}</Typography>
+      <Typography variant="h4" gutterBottom align="center" fontWeight={700}>
+        <BarChart sx={{ verticalAlign: 'middle', mr: 1 }} />
+        Résultats du Quiz
+      </Typography>
+      <Typography variant="h6" gutterBottom display="flex" alignItems="center">
+        <EmojiEvents sx={{ mr: 1 }} />
+        Médaille :
+        {percent >= 90 && <MilitaryTech sx={{ ml: 1, color: 'gold' }} />}
+        {percent >= 70 && percent < 90 && <MilitaryTech sx={{ ml: 1, color: 'silver' }} />}
+        {percent >= 50 && percent < 70 && <MilitaryTech sx={{ ml: 1, color: '#cd7f32' }} />}
+        {percent < 50 && <AccessTime sx={{ ml: 1 }} />}
+      </Typography>
+      {percent < 50 ? (
+        <Box display="flex" alignItems="center">
+          <RocketLaunch sx={{ mr: 1 }} />
+          <Typography variant="body1">{feedback}</Typography>
+        </Box>
+      ) : (
+        <Typography variant="body1" gutterBottom>{feedback}</Typography>
+      )}
       <Typography variant="h6" gutterBottom>Note : {earnedPoints} / {maxPoints} ({Math.round(percent)}%)</Typography>
 
       {corrected.map((q, index) => (
-        <Card key={index} sx={{ my: 2, borderLeft: q.isCorrect ? '5px solid green' : q.type === 'ouverte' ? '5px solid #1976d2' : '5px solid red' }}>
-          <CardContent>
-            <Typography variant="h6">{index + 1}. {q.question}</Typography>
+        <Paper key={index} elevation={2} sx={{ my: 2, p: 3, borderLeft: q.isCorrect ? '5px solid green' : q.type === 'ouverte' ? '5px solid #1976d2' : '5px solid red' }}>
+          <Typography variant="h6">{index + 1}. {q.question}</Typography>
 
-            <Box sx={{ mt: 1 }}>
-              <Typography sx={{ color: 'green' }}>Ta réponse : {Array.isArray(q.userAnswer) ? q.userAnswer.join(', ') : typeof q.userAnswer === 'object' ? JSON.stringify(q.userAnswer) : q.userAnswer}</Typography>
+          <Box sx={{ mt: 1 }}>
+            <Typography sx={{ color: 'green' }}>Ta réponse : {Array.isArray(q.userAnswer) ? q.userAnswer.join(', ') : typeof q.userAnswer === 'object' ? JSON.stringify(q.userAnswer) : q.userAnswer}</Typography>
 
-              {q.type !== 'ouverte' && (
-                <Typography sx={{ color: q.isCorrect ? 'green' : 'red' }}>Bonne réponse : {Array.isArray(q.answer) ? q.answer.join(', ') : typeof q.answer === 'object' ? JSON.stringify(q.answer) : q.answer}</Typography>
-              )}
+            {q.type !== 'ouverte' && (
+              <Typography sx={{ color: q.isCorrect ? 'green' : 'red' }}>Bonne réponse : {Array.isArray(q.answer) ? q.answer.join(', ') : typeof q.answer === 'object' ? JSON.stringify(q.answer) : q.answer}</Typography>
+            )}
 
-              {q.type === 'ouverte' && q.correction && (
-                <Typography sx={{ color: '#1976d2', mt: 1 }}>Correction IA : {q.correction}</Typography>
-              )}
-            </Box>
+            {q.type === 'ouverte' && q.correction && (
+              <Typography sx={{ color: '#1976d2', mt: 1 }}>Correction IA : {q.correction}</Typography>
+            )}
+          </Box>
 
-            <Typography sx={{ mt: 1, fontWeight: 'bold' }}>Points attribués : {q.isCorrect ? q.points : 0} / {q.points}</Typography>
-          </CardContent>
-        </Card>
+          <Typography sx={{ mt: 1, fontWeight: 'bold' }}>Points attribués : {q.isCorrect ? q.points : 0} / {q.points}</Typography>
+        </Paper>
       ))}
 
       <Box mt={4} display="flex" flexWrap="wrap" justifyContent="center" gap={2}>
-        <Button variant="contained" color="primary" size="large" onClick={() => window.location.href = '/'}>Accueil</Button>
-        <Button variant="contained" color="error" size="large" onClick={handleRestart}>🔁 Recommencer</Button>
-        <Button variant="contained" color="secondary" size="large" onClick={handleRecap}>📚 Aide-moi à réviser</Button>
-        <Button variant="contained" color="success" size="large" onClick={handleRetrySameTheme}>🔄 Refaire ce thème</Button>
-        <Button variant="outlined" color="info" size="large" onClick={handleShare}>📤 Partager mon score</Button>
+        <Button variant="contained" color="primary" size="large" startIcon={<Home />} onClick={() => window.location.href = '/'}>Accueil</Button>
+        <Button variant="contained" color="error" size="large" startIcon={<RestartAlt />} onClick={handleRestart}>Recommencer</Button>
+        <Button variant="contained" color="secondary" size="large" startIcon={<MenuBook />} onClick={handleRecap}>Aide-moi à réviser</Button>
+        <Button variant="contained" color="success" size="large" startIcon={<Replay />} onClick={handleRetrySameTheme}>Refaire ce thème</Button>
+        <Button variant="outlined" color="info" size="large" startIcon={<IosShare />} onClick={handleShare}>Partager mon score</Button>
       </Box>
 
       <Snackbar open={showSnackbar} autoHideDuration={2000} onClose={() => setShowSnackbar(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>

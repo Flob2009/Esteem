@@ -10,11 +10,15 @@ import {
   CircularProgress,
   Container,
   FormControlLabel,
+  Paper,
   Radio,
   RadioGroup,
   TextField,
   Typography,
 } from '@mui/material';
+import SmartToy from '@mui/icons-material/SmartToy';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Replay from '@mui/icons-material/Replay';
 
 import OrderQuestion from '@/components/question/OrderQuestion';
 import MatchQuestion from '@/components/question/MatchQuestion';
@@ -103,8 +107,9 @@ Ne renvoie que le tableau JSON, sans commentaire ni texte.
 
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
-      <Typography variant="h4" gutterBottom>
-        🤖 Quiz IA généré
+      <Typography variant="h4" gutterBottom align="center" fontWeight={700}>
+        <SmartToy sx={{ verticalAlign: 'middle', mr: 1 }} />
+        Quiz généré par l’IA
       </Typography>
 
       {loading && (
@@ -123,97 +128,97 @@ Ne renvoie que le tableau JSON, sans commentaire ni texte.
       {!loading && !error && quiz.length > 0 && (
         <Box>
           {quiz.map((q, index) => (
-            <Card key={index} sx={{ my: 2 }}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Question {index + 1} — {q.type}
-                </Typography>
-                <Typography gutterBottom>{q.question}</Typography>
+            <Paper key={index} elevation={2} sx={{ my: 2, p: 3, backgroundColor: '#fafafa' }}>
+              <Typography variant="h6" gutterBottom>
+                Question {index + 1} — {q.type}
+              </Typography>
+              <Typography gutterBottom>{q.question}</Typography>
 
-                {q.type === 'qcm' && (
-                  <RadioGroup
-                    value={answers[index] || ''}
-                    onChange={(e) => handleAnswer(index, e.target.value)}
-                  >
-                    {q.options.map((opt: string, i: number) => (
-                      <FormControlLabel
-                        key={i}
-                        value={opt}
-                        control={<Radio />}
-                        label={opt}
-                      />
-                    ))}
-                  </RadioGroup>
-                )}
+              {q.type === 'qcm' && (
+                <RadioGroup
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswer(index, e.target.value)}
+                >
+                  {q.options.map((opt: string, i: number) => (
+                    <FormControlLabel
+                      key={i}
+                      value={opt}
+                      control={<Radio />}
+                      label={opt}
+                    />
+                  ))}
+                </RadioGroup>
+              )}
 
-                {q.type === 'choix_multiples' && (
-                  <Box>
-                    {q.options.map((opt: string, i: number) => (
-                      <FormControlLabel
-                        key={i}
-                        control={
-                          <Checkbox
-                            checked={answers[index]?.includes(opt) || false}
-                            onChange={(e) => {
-                              const current = answers[index] || [];
-                              const newAnswers = e.target.checked
-                                ? [...current, opt]
-                                : current.filter((a: string) => a !== opt);
-                              handleAnswer(index, newAnswers);
-                            }}
-                          />
-                        }
-                        label={opt}
-                      />
-                    ))}
-                  </Box>
-                )}
+              {q.type === 'choix_multiples' && (
+                <Box>
+                  {q.options.map((opt: string, i: number) => (
+                    <FormControlLabel
+                      key={i}
+                      control={
+                        <Checkbox
+                          checked={answers[index]?.includes(opt) || false}
+                          onChange={(e) => {
+                            const current = answers[index] || [];
+                            const newAnswers = e.target.checked
+                              ? [...current, opt]
+                              : current.filter((a: string) => a !== opt);
+                            handleAnswer(index, newAnswers);
+                          }}
+                        />
+                      }
+                      label={opt}
+                    />
+                  ))}
+                </Box>
+              )}
 
-                {(q.type === 'texte_trous' || q.type === 'ouverte') && (
-                  <TextField
-                    fullWidth
-                    placeholder="Ta réponse"
-                    value={answers[index] || ''}
-                    onChange={(e) => handleAnswer(index, e.target.value)}
-                  />
-                )}
+              {(q.type === 'texte_trous' || q.type === 'ouverte') && (
+                <TextField
+                  fullWidth
+                  placeholder="Ta réponse"
+                  value={answers[index] || ''}
+                  onChange={(e) => handleAnswer(index, e.target.value)}
+                />
+              )}
 
-                {q.type === 'correspondance' && (
-                  <MatchQuestion
-                    pairs={q.pairs}
-                    onChange={(val) => handleAnswer(index, val)}
-                  />
-                )}
+              {q.type === 'correspondance' && (
+                <MatchQuestion
+                  pairs={q.pairs}
+                  onChange={(val) => handleAnswer(index, val)}
+                />
+              )}
 
-                {q.type === 'ordre' && (
-                  <OrderQuestion
-                    items={q.items}
-                    onChange={(val) => handleAnswer(index, val)}
-                  />
-                )}
-              </CardContent>
-            </Card>
+              {q.type === 'ordre' && (
+                <OrderQuestion
+                  items={q.items}
+                  onChange={(val) => handleAnswer(index, val)}
+                />
+              )}
+            </Paper>
           ))}
 
           <Box textAlign="center" mt={4} display="flex" gap={2} flexWrap="wrap" justifyContent="center">
             <Button
               variant="contained"
               size="large"
+              startIcon={<CheckCircle />}
               onClick={handleFinish}
             >
-              ✅ Terminer le quiz
+              Terminer le quiz
             </Button>
 
             <Button
               variant="outlined"
               color="secondary"
+              startIcon={<Replay />}
               onClick={() => {
                 localStorage.removeItem('ai-quiz-data');
                 localStorage.removeItem('ai-quiz-setup');
                 window.location.href = '/quiz/ai';
               }}
             >
-              🔁 Recommencer
+              Recommencer
             </Button>
           </Box>
         </Box>

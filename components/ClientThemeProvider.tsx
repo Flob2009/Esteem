@@ -12,7 +12,14 @@ export default function ClientThemeProvider({ children }: { children: ReactNode 
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CssBaseline />
+        <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1.2rem' }}>Chargement de l'application...</span>
+      </div>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>

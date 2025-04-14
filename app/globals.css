@@ -6,4 +6,10 @@ body {
     box-sizing: border-box;
     min-height: 100vh;
     background: linear-gradient(to right, #e0c3fc, #8ec5fc);
-  }
+}
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
