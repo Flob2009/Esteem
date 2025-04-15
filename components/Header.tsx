@@ -125,9 +125,23 @@ export default function Header() {
               </Menu>
             </>
           ) : (
-            <Button onClick={() => router.push('/login')} color="inherit" sx={{ textTransform: 'none', fontWeight: 'bold', textShadow: '0 0.5px 0.5px rgba(0,0,0,0.2)' }}>
-              🔐 Connexion
-            </Button>
+            <>
+              <Button
+                onClick={() => router.push('/quiz/history')}
+                color="inherit"
+                sx={{ textTransform: 'none', fontWeight: 'bold', textShadow: '0 0.5px 0.5px rgba(0,0,0,0.2)' }}
+              >
+                <BarChart sx={{ verticalAlign: 'middle', mr: 1 }} />
+                Mes résultats
+              </Button>
+              <Button
+                onClick={() => router.push('/login')}
+                color="inherit"
+                sx={{ textTransform: 'none', fontWeight: 'bold', textShadow: '0 0.5px 0.5px rgba(0,0,0,0.2)' }}
+              >
+                🔐 Connexion
+              </Button>
+            </>
           )}
         </Box>
       </Toolbar>

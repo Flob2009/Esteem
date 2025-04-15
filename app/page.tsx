@@ -1,21 +1,14 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Button, Stack } from '@mui/material';
 import SmartToy from '@mui/icons-material/SmartToy';
 import EditNote from '@mui/icons-material/EditNote';
-import EmojiObjects from '@mui/icons-material/EmojiObjects';
-import TouchApp from '@mui/icons-material/TouchApp';
+import DashboardCustomize from '@mui/icons-material/DashboardCustomize';
+import { useSession } from 'next-auth/react';
 
 export default function HomePage() {
   const router = useRouter();
-
-  const handleNavigateToAIQuiz = () => {
-    router.push('/quiz/ai');
-  };
-
-  const handleNavigateToManualQuiz = () => {
-    router.push('/quiz/manual');
-  };
+  const { data: session } = useSession();
 
   return (
     <Box
@@ -30,8 +23,8 @@ export default function HomePage() {
         px: 2,
       }}
     >
-      <Container maxWidth="md">
-        <Box sx={{ mb: 6 }}>
+      <Container maxWidth="sm">
+        <Box sx={{ mb: 4 }}>
           <img
             src="/logo.png"
             alt="Esteem Logo"
@@ -45,73 +38,47 @@ export default function HomePage() {
         </Box>
 
         <Typography variant="h4" fontWeight={700} gutterBottom>
-          Bienvenue dans Esteem
+          Bienvenue sur Esteem
         </Typography>
 
-        <Typography variant="h6" sx={{ mb: 2 }}>
-          <EmojiObjects sx={{ verticalAlign: 'middle', mr: 1 }} />
-          Teste tes connaissances grâce à Esteem
-        </Typography>
         <Typography variant="subtitle1" sx={{ mb: 4 }}>
-          <TouchApp sx={{ verticalAlign: 'middle', mr: 1 }} />
-          Clique sur une carte pour commencer
+          Crée ou joue des quiz adaptés à ton niveau. Analyse tes résultats et progresse !
         </Typography>
 
-        <Box
-          display="flex"
-          flexDirection={{ xs: 'column', md: 'row' }}
-          gap={4}
-          justifyContent="center"
-          mb={6}
-        >
-          <Box
-            onClick={handleNavigateToAIQuiz}
-            sx={{
-              flex: 1,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              p: 3,
-              borderRadius: 4,
-              transition: 'transform 0.3s',
-              cursor: 'pointer',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                backgroundColor: 'rgba(255,255,255,0.15)',
-              },
-            }}
+        <Stack spacing={2} direction="column" alignItems="center" mb={4}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<SmartToy />}
+            onClick={() => router.push('/quiz/ai')}
+            sx={{ width: '100%' }}
           >
-            <Typography variant="h6" gutterBottom>
-              <SmartToy sx={{ verticalAlign: 'middle', mr: 1 }} />
-              Quiz IA
-            </Typography>
-            <Typography variant="body2">
-              Générés par l’IA. Corrigés automatiquement. Idéal pour tester un thème et obtenir une fiche.
-            </Typography>
-          </Box>
+            S'entraîner avec l'IA
+          </Button>
 
-          <Box
-            onClick={handleNavigateToManualQuiz}
-            sx={{
-              flex: 1,
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              p: 3,
-              borderRadius: 4,
-              transition: 'transform 0.3s',
-              cursor: 'pointer',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                backgroundColor: 'rgba(255,255,255,0.15)',
-              },
-            }}
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            startIcon={<EditNote />}
+            onClick={() => router.push('/quiz/manual')}
+            sx={{ width: '100%' }}
           >
-            <Typography variant="h6" gutterBottom>
-              <EditNote sx={{ verticalAlign: 'middle', mr: 1 }} />
-              Quiz personnalisés
-            </Typography>
-            <Typography variant="body2">
-              Crée des quiz personnalisés que tu peux partager facilement avec tes élèves.
-            </Typography>
-          </Box>
-        </Box>
+            Créer un quiz
+          </Button>
+        </Stack>
+
+        {session && (
+          <Button
+            variant="outlined"
+            startIcon={<DashboardCustomize />}
+            onClick={() => router.push('/dashboard')}
+            sx={{ mt: 2 }}
+          >
+            Accéder au tableau de bord
+          </Button>
+        )}
       </Container>
     </Box>
   );

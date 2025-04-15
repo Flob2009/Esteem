@@ -30,6 +30,7 @@ export default function QuizsListPage() {
     const fetchQuizzes = async () => {
       try {
         const res = await fetch('/api/dashboard/quizs');
+        if (!res.ok) throw new Error(`Erreur API (${res.status})`);
         const data = await res.json();
         setQuizzes(data);
 

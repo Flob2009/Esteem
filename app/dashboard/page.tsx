@@ -46,20 +46,28 @@ export default function DashboardPage() {
 
     if (status === 'authenticated') {
       fetch('/api/user/last-result')
-        .then((res) => res.json())
-        .then((data) => setLastResult(data));
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data) setLastResult(data);
+        });
 
       fetch('/api/user/last-badge')
-        .then((res) => res.json())
-        .then((data) => setLastBadge(data));
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data) setLastBadge(data);
+        });
 
       fetch('/api/user/average-score')
-        .then((res) => res.json())
-        .then((data) => setAverageScore(data?.average ?? null));
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data?.average !== undefined) setAverageScore(data.average);
+        });
 
       fetch('/api/user/quiz-count')
-        .then((res) => res.json())
-        .then((data) => setQuizCount(data?.count ?? null));
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data?.count !== undefined) setQuizCount(data.count);
+        });
     }
   }, [status, router]);
 
@@ -114,7 +122,14 @@ export default function DashboardPage() {
                   Score : {lastResult.score}/20
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {format(new Date(lastResult.playedAt), 'd MMMM yyyy', { locale: fr })}
+                  {(() => {
+                    const date = lastResult?.playedAt;
+                    if (typeof date !== 'string') return 'Date inconnue';
+                    const parsed = new Date(date);
+                    return isNaN(parsed.getTime())
+                      ? 'Date inconnue'
+                      : format(parsed, 'd MMMM yyyy', { locale: fr });
+                  })()}
                 </Typography>
               </>
             ) : (

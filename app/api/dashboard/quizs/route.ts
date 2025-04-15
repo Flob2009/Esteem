@@ -10,11 +10,17 @@ export async function GET() {
     return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
   }
 
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+
+  if (!user) {
+    return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 404 });
+  }
+
   const quizzes = await prisma.manualQuiz.findMany({
     where: {
-      user: {
-        email: session.user.email,
-      },
+      userId: user.id,
     },
     orderBy: {
       createdAt: 'desc',

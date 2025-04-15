@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -14,11 +14,11 @@ export async function GET() {
     where: {
       user: { email: session.user.email },
     },
-    orderBy: {
-      playedAt: 'desc',
-    },
     include: {
-      quiz: true,
+      manualQuiz: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
 
@@ -27,8 +27,9 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    title: lastResult.quiz.title,
     score: lastResult.score,
-    playedAt: lastResult.playedAt,
+    total: lastResult.total,
+    createdAt: lastResult.createdAt,
+    quizTitle: lastResult.manualQuiz?.title || 'Quiz sans titre',
   });
 }
