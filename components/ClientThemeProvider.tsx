@@ -4,6 +4,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
 import theme from '@/theme';
 import Header from '@/components/Header';
+import { SessionProvider } from 'next-auth/react';
 
 export default function ClientThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
@@ -22,10 +23,12 @@ export default function ClientThemeProvider({ children }: { children: ReactNode 
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Header />
-      {children}
-    </ThemeProvider>
+    <SessionProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Header />
+        {children}
+      </ThemeProvider>
+    </SessionProvider>
   );
 }

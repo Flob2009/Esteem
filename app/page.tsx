@@ -1,5 +1,4 @@
 'use client';
-
 import { useRouter } from 'next/navigation';
 import { Box, Container, Typography } from '@mui/material';
 import SmartToy from '@mui/icons-material/SmartToy';

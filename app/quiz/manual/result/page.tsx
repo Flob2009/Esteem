@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import {
   Box,
   Button,
@@ -128,6 +130,8 @@ export default function ManualQuizResultPage() {
         date: new Date().toISOString(),
       };
 
+      const playedDate = historyItem.date;
+
       const historyRaw = localStorage.getItem('manual-quiz-history');
       let history = [];
       if (historyRaw) {
@@ -155,6 +159,12 @@ export default function ManualQuizResultPage() {
         <EmojiEvents sx={{ verticalAlign: 'middle', mr: 1 }} />
         Résultats du Quiz Personnalisé
       </Typography>
+
+      {playedDate && (
+        <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 2 }}>
+          Date du quiz : {format(new Date(playedDate), 'd MMMM yyyy', { locale: fr })}
+        </Typography>
+      )}
 
       <Typography variant="h6" align="center" sx={{ mt: 1 }}>
         Score : {score} / {results.length} — Médaille : {medal}

@@ -95,11 +95,13 @@ Ne renvoie que le tableau JSON, sans commentaire ni texte.
   };
 
   const handleFinish = () => {
+    const now = new Date().toISOString();
     const formatted = quiz.map((q, index) => ({
       question: q.question,
       type: q.type,
       answer: q.answer ?? q.answers ?? q.pairs ?? q.items ?? '',
       userAnswer: answers[index],
+      date: now,
     }));
     localStorage.setItem('ai-quiz-data', JSON.stringify(formatted));
     window.location.href = '/quiz/ai/result';

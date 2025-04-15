@@ -58,6 +58,36 @@ const theme = createTheme({
       fontWeight: 600,
     },
   },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          boxShadow: 'none',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 6,
+          boxShadow: 'none',
+          textTransform: 'none',
+          fontWeight: 500,
+          paddingInline: 16,
+          paddingBlock: 10,
+        },
+      },
+    },
+  },
 });
 
 export default theme;

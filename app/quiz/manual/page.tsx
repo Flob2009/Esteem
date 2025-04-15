@@ -166,7 +166,7 @@ export default function ManualQuizPage() {
           sx={{ mb: 2 }}
         />
  
-        <Box display="flex" flexDirection="column" gap={2} mb={2}>
+        <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} mb={2}>
           <Select
             value={subject}
             onChange={(e) => setSubject(e.target.value)}

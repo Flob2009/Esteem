@@ -1,0 +1,89 @@
+// Configuration de la base de données
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Générateur du client Prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modèle Utilisateur
+model User {
+  id              String       @id @default(cuid())
+  email           String       @unique
+  name            String?
+  image           String?
+  password        String
+  manualQuizzes   ManualQuiz[]
+  results         Result[]
+  recaps          Recap[]
+  createdAt       DateTime     @default(now())
+}
+
+// Modèle Quiz (IA ou manuel)
+model ManualQuiz {
+  id         String   @id @default(cuid())
+  title      String
+  subject    String
+  level      String
+  classLevel String
+  type       String   // 'ai' ou 'manual'
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  createdAt  DateTime @default(now())
+  questions  Question[]
+}
+
+// Modèle Résultat de quiz
+model Result {
+  id            String   @id @default(cuid())
+  manualQuizId  String
+  userId        String?
+  score         Float
+  total         Float
+  details       Json
+  createdAt     DateTime @default(now())
+  user          User?    @relation(fields: [userId], references: [id])
+}
+
+// Modèle Fiche de révision
+model Recap {
+  id        String   @id @default(cuid())
+  userId    String
+  theme     String
+  niveau    String
+  content   Json
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Question {
+  id          String      @id @default(cuid())
+  quiz        ManualQuiz  @relation(fields: [quizId], references: [id])
+  quizId      String
+  type        String
+  question    String
+  options     Json
+  correct     String
+  createdAt   DateTime    @default(now())
+}
+
+model Badge {
+  id        String   @id @default(cuid())
+  label     String
+  emoji     String
+  createdAt DateTime @default(now())
+  userBadges UserBadge[]
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  badgeId   String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  badge  Badge  @relation(fields: [badgeId], references: [id])
+}

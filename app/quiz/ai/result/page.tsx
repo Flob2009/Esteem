@@ -21,6 +21,8 @@ import EmojiEvents from '@mui/icons-material/EmojiEvents';
 import RocketLaunch from '@mui/icons-material/RocketLaunch';
 import AccessTime from '@mui/icons-material/AccessTime';
 import MilitaryTech from '@mui/icons-material/MilitaryTech';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 interface Question {
   question: string;
@@ -134,7 +136,7 @@ export default function AIQuizResultPage() {
         const setup = localStorage.getItem('ai-quiz-setup');
         const { theme, niveau } = setup ? JSON.parse(setup) : { theme: 'Thème inconnu', niveau: '?' };
         const pourcentage = (totalEarned / totalMax) * 100;
-        const date = new Date().toLocaleDateString();
+        const date = new Date().toISOString();
 
         const current = localStorage.getItem('ai-quiz-history');
         const history = current ? JSON.parse(current) : [];
@@ -210,6 +212,10 @@ export default function AIQuizResultPage() {
     feedback = "Courage, persévère !";
   }
 
+  const historyRaw = localStorage.getItem('ai-quiz-history');
+  const fullHistory = historyRaw ? JSON.parse(historyRaw) : [];
+  const lastPlayedDate = fullHistory.length > 0 ? fullHistory[fullHistory.length - 1].date : null;
+
   if (loading) {
     return <Container maxWidth="md" sx={{ textAlign: 'center', py: 6 }}><CircularProgress /><Typography mt={2}>Correction...</Typography></Container>;
   }
@@ -224,21 +230,10 @@ export default function AIQuizResultPage() {
         <BarChart sx={{ verticalAlign: 'middle', mr: 1 }} />
         Résultats du Quiz
       </Typography>
-      <Typography variant="h6" gutterBottom display="flex" alignItems="center">
-        <EmojiEvents sx={{ mr: 1 }} />
-        Médaille :
-        {percent >= 90 && <MilitaryTech sx={{ ml: 1, color: 'gold' }} />}
-        {percent >= 70 && percent < 90 && <MilitaryTech sx={{ ml: 1, color: 'silver' }} />}
-        {percent >= 50 && percent < 70 && <MilitaryTech sx={{ ml: 1, color: '#cd7f32' }} />}
-        {percent < 50 && <AccessTime sx={{ ml: 1 }} />}
-      </Typography>
-      {percent < 50 ? (
-        <Box display="flex" alignItems="center">
-          <RocketLaunch sx={{ mr: 1 }} />
-          <Typography variant="body1">{feedback}</Typography>
-        </Box>
-      ) : (
-        <Typography variant="body1" gutterBottom>{feedback}</Typography>
+      {lastPlayedDate && (
+        <Typography variant="body2" gutterBottom sx={{ color: 'text.secondary' }}>
+          Date du quiz : {format(new Date(lastPlayedDate), 'd MMMM yyyy', { locale: fr })}
+        </Typography>
       )}
       <Typography variant="h6" gutterBottom>Note : {earnedPoints} / {maxPoints} ({Math.round(percent)}%)</Typography>
 

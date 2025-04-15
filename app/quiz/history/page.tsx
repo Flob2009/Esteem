@@ -12,6 +12,8 @@ import SmartToy from '@mui/icons-material/SmartToy';
 import EditNote from '@mui/icons-material/EditNote';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import ArrowForwardIos from '@mui/icons-material/ArrowForwardIos';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 interface QuizHistoryItem {
   date: string;
@@ -114,7 +116,11 @@ export default function QuizHistoryPage() {
                 {item.cycle && <><strong>Cycle :</strong> {item.cycle} &nbsp;&nbsp;|&nbsp;&nbsp;</>}
                 <strong>Niveau :</strong> {item.niveau} &nbsp;&nbsp;|&nbsp;&nbsp;
                 <strong>Type :</strong> {item.type === 'ai' ? 'Quiz IA' : 'Quiz personnalisé'} &nbsp;&nbsp;|&nbsp;&nbsp;
-                <strong>Date :</strong> {new Date(item.date).toLocaleString() || 'Date inconnue'} &nbsp;&nbsp;|&nbsp;&nbsp;
+                <strong>Date :</strong>{' '}
+                {item.date && !isNaN(new Date(item.date).getTime())
+                  ? format(new Date(item.date), "d MMMM yyyy", { locale: fr })
+                  : 'Date inconnue'}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
                 <strong>Score :</strong> {item.score} / {item.max} ({Math.round(item.pourcentage)}%)
               </Typography>
             </Paper>
